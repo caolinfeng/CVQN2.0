@@ -13,6 +13,7 @@ import time
 import pdb
 
 from pytorch_msssim import msssim
+from pytorch_msssim import ssim
 from config import config
 from config import update_config, create_logger
 import dataset
@@ -188,7 +189,7 @@ class Trainer():
 
             # loss = self.alpha * loss_distortion + loss_entropy + self.beta * loss_gmm
             # loss = self.alpha * loss_distortion + loss_entropy
-            loss = 1-msssim(pu2_encode(refimg), pu2_encode(re))
+            loss = 1-ssim(pu2_encode(refimg), pu2_encode(re))
 
             loss.requires_grad = True
 
@@ -290,7 +291,7 @@ class Trainer():
             psnr_mean.append(psnr_item.item())
             
             # ssim_item = msssim(img255.unsqueeze(0), re255.unsqueeze(0))
-            ssim_item = msssim(img, re)
+            ssim_item = ssim(img, re)
 
             ssim_mean.append(ssim_item.item())
             
