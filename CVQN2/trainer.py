@@ -127,7 +127,7 @@ class Trainer():
             from copy import deepcopy
             # img = img*255. 
             # img = display_model_torch(img)
-            refimg = deepcopy(img)
+            refimg_train = deepcopy(img)
 
             #add perceptual transform
             from perceptual_transform import pu2_encode
@@ -169,7 +169,7 @@ class Trainer():
 
             re = self.decoder(bc_reorder)
 
-            print('re_trian size:{}',format(re.size()))
+#             print('re_trian size:{}',format(re.size()))
 
             img255 = img.mul(255).add_(0.5).clamp_(0, 255).floor()
             re_ = re.mul(255).add_(0.5).clamp_(0, 255)
@@ -189,10 +189,10 @@ class Trainer():
 
             # loss = self.alpha * loss_distortion + loss_entropy + self.beta * loss_gmm
             # loss = self.alpha * loss_distortion + loss_entropy
-            loss = 1-ssim(pu2_encode(refimg), pu2_encode(re))
+#             loss = 1-ssim(pu2_encode(refimg), pu2_encode(re))
 
-            loss.requires_grad = True
-
+#             loss.requires_grad = True
+            loss = nn.MSELoss()(re, refimg_train)
             loss.backward()
 
             self._solver_update()
@@ -233,7 +233,7 @@ class Trainer():
             from copy import deepcopy
             # img = img*255. 
             # img = display_model_torch(img)
-            refimg = deepcopy(img)
+            refimg_test = deepcopy(img)
 
             #add perceptual transform
             from perceptual_transform import pu2_encode
@@ -291,7 +291,8 @@ class Trainer():
             psnr_mean.append(psnr_item.item())
             
             # ssim_item = msssim(img255.unsqueeze(0), re255.unsqueeze(0))
-            ssim_item = ssim(img, re)
+#             ssim_item = ssim(img, re)
+            ssim_item = -nn.MSELoss()(re, refimg_test)
 
             ssim_mean.append(ssim_item.item())
             
