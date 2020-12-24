@@ -259,7 +259,7 @@ class Encoder(nn.Module):
         self.tail = nn.Sequential(*modules_tail)
 
     def forward(self, x):
-        x = self.sub_mean(x)
+#         x = self.sub_mean(x)
 
         x = self.head(x)
 
@@ -330,7 +330,7 @@ class Decoder(nn.Module):
 
         x = self.tail(res)
 
-        x = self.add_mean(x)
+#         x = self.add_mean(x)
 
         return x
 
